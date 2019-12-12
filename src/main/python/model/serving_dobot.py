@@ -1,5 +1,5 @@
 from PyQt5.QtCore import pyqtSignal, QObject, QThread
-import zmq
+import socket
 import threading
 
 
@@ -16,17 +16,23 @@ class ServingDobot(QObject):
 
     def __init__(self):
         QObject.__init__(self)
-        self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.REP)
-        self.socket.bind("tcp://*:19111")
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.connect(('192.168.1.246', 8501))
         self.is_waiting_req = True
-        self.__waiting_dobot_req_thread = threading.Thread(target=self.waiting_dobot_req)
+        self.__waiting_dobot_req_thread = threading.Thread(target=self.waiting_dobot_req, daemon=True)
         self.__waiting_dobot_req_thread.start()
 
     def waiting_dobot_req(self):
         self.is_waiting_req = True
         while self.is_waiting_req:
-            message = self.socket.recv_string()
+            comand = "RD DM05000.U"
+            separator = "\r"
+            msg = comand + separator
+            self.socket.send(msg.encode("ascii"))
+
+            message = self.socket.recv(1024)
+            message = int(message)
+
             if message:
                 self.dobot_req.emit()
                 self.is_waiting_req = False
@@ -34,10 +40,18 @@ class ServingDobot(QObject):
     def sending_inspection_result(self, result):
         if not self.is_waiting_req:
             if result:
-                self.socket.send(b'OK')
+                comand = "WR DM05001.U 00001"
+                separator = "\r"  # 区切り符号CRの16進数表記
+                msg = comand + separator
+                self.socket.send(msg.encode("ascii"))
+                self.socket.recv(1024)
             else:
-                self.socket.send(b'NG')
-            self.__waiting_dobot_req_thread = threading.Thread(target=self.waiting_dobot_req)
+                comand = "WR DM05001.U 00000"
+                separator = "\r"  # 区切り符号CRの16進数表記
+                msg = comand + separator
+                self.socket.send(msg.encode("ascii"))
+                self.socket.recv(1024)
+            self.__waiting_dobot_req_thread = threading.Thread(target=self.waiting_dobot_req, daemon=True)
             self.__waiting_dobot_req_thread.start()
 
 
