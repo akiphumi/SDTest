@@ -9,6 +9,7 @@ from view.past_result import PastResultWidget
 from model.project import Project
 from model.learning_model import LearningModel
 from model.fbs import AppInfo
+from model.camera_model import CameraModel
 from pathlib import Path
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QDesktopWidget
@@ -56,6 +57,8 @@ class MainWindow(QMainWindow):
         LearningModel.default().predicting_finished.connect(self.on_finished_predicting)
         LearningModel.default().training_start.connect(self.on_start_training)
         LearningModel.default().training_finished.connect(self.on_finished_training)
+
+        self.camera_model = CameraModel.default()
 
     def setup_menu_bar(self):
         self.ui.action_new_project.triggered.connect(self.on_triggered_action_new_project)
@@ -151,6 +154,7 @@ class MainWindow(QMainWindow):
         self.msgBox.exec()
 
     def closeEvent(self, QCloseEvent):
+        self.camera_model.close()
         sys.exit()
 
     def on_start_predicting(self):

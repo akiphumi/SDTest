@@ -62,17 +62,18 @@ class CameraModel(QObject):
                 controller_dict = dict([(c.display_name, c) for c in cam.controls])
                 print(controller_dict.keys())
                 if 'Auto Focus' in controller_dict:
-                    controller_dict['Auto Focus'].value = 0
+                    controller_dict['Auto Focus'].value = 1
                 print(device['name'])
-                uvc_thread = threading.Thread(target=self.grab_uvc, args=(device['name'], cam))
-                uvc_thread.start()
+                self.is_running = True
+                self.uvc_thread = threading.Thread(target=self.grab_uvc, args=(device['name'], cam), daemon=True)
+                self.uvc_thread.start()
                 self.__old_device_list.append(device['name'])
 
     def grab_uvc(self, device_name, uvc_capture):
-        width, height, fps = uvc_capture.avaible_modes[2]
+        width, height, fps = uvc_capture.avaible_modes[0]
         print((width, height, fps))
         uvc_capture.frame_mode = (width, height, fps)
-        while True:
+        while self.is_running:
             frame = uvc_capture.get_frame_robust()
             self.images[device_name] = frame.img
 
@@ -114,6 +115,12 @@ class CameraModel(QObject):
         img = cv2.resize(img, (RESIZED_WIDTH, RESIZED_HEIGHT))
         cv2.imwrite(image_path, img)
         self.image_saved.emit(image_path)
+
+    def close(self):
+        self.is_running = False
+        self.uvc_thread.join()
+        for key, val in self.cams.items():
+            val.close()
 
     def set_selected_camera_to_view_finder(self, view_finder_obj):
         # TODO:Handle many cameras on version 2.0 or more
