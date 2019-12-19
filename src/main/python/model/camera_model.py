@@ -5,10 +5,8 @@ import threading
 from PyQt5.QtCore import pyqtSignal, QObject, QTimer
 from PyQt5.QtGui import QImage
 import queue, cv2, copy
-if is_windows():
-    import uvc
-else:
-    from module.pyuvc import uvc
+import uvc
+
 
 class CameraModel(QObject):
     __default_instance = None
