@@ -225,16 +225,16 @@ class Ui_Test(object):
     def retranslateUi(self, Test):
         _translate = QtCore.QCoreApplication.translate
         Test.setWindowTitle(_translate("Test", "Form"))
-        self.overfitting_alert_label.setText(_translate("Test", "トレーニングと性能評価で良品画像の分布に乖離があり、検査結果が正しく無い可能性が高いです。トレーニングをやり直したり、モデルを変更することが改善のヒントになります。"))
-        self.threshold_title_label.setText(_translate("Test", "閾値"))
-        self.about_threshold_button.setToolTip(_translate("Test", "<html><head/><body><p><span style=\" font-size:14pt;\">閾値とは</span></p><p><span style=\" font-size:14pt;\">AIが</span><span style=\" font-size:14pt; font-weight:600; color:#3fda68;\">良品</span><span style=\" font-size:14pt;\">と</span><span style=\" font-size:14pt; font-weight:600; color:#e66643;\">不良品</span><span style=\" font-size:14pt;\">を判別する境界値です。まず、検出の際、AIは各画像の「</span><span style=\" font-size:14pt; font-weight:600;\">正常らしさ</span><span style=\" font-size:14pt;\">」を計算します。そして、その「</span><span style=\" font-size:14pt; font-weight:600;\">正常らしさ</span><span style=\" font-size:14pt;\">」が閾値以下の画像を</span><span style=\" font-size:14pt; font-weight:600; color:#e66643;\">不良品</span><span style=\" font-size:14pt;\">、閾値以上の画像を</span><span style=\" font-size:14pt; font-weight:600; color:#3fda68;\">良品</span><span style=\" font-size:14pt;\">だと判定します。よって、閾値を高くすると、製品を「良品」と判定する基準が厳しくなり</span><span style=\" font-size:14pt; font-weight:600; color:#e66643;\">不良品</span><span style=\" font-size:14pt;\">を見逃しにくくなる一方、</span><span style=\" font-size:14pt; font-weight:600; color:#3fda68;\">良品</span><span style=\" font-size:14pt;\">も「不良品」と判定してしまう可能性が高くなります。閾値はバランス良く調整してください。</span></p></body></html>"))
-        self.performance_title_label.setText(_translate("Test", "性能評価"))
-        self.accuracy_title_label.setText(_translate("Test", "正解率"))
+        self.overfitting_alert_label.setText(_translate("Test", "Training image and test image are discrepancy in the distribution of non-defective images, and it is highly possible that the inspection results are incorrect. Retraining or changing models can be a hint of improvement."))
+        self.threshold_title_label.setText(_translate("Test", "Threshold"))
+        self.about_threshold_button.setToolTip(_translate("Test", "<html><head/><body><p><span style=\" font-size:14pt;\">What is threshold?</span></p><p><span style=\" font-size:14pt;\">The boundary value which AI determines</span><span style=\" font-size:14pt; font-weight:600; color:#3fda68;\">good</span><span style=\" font-size:14pt;\">and</span><span style=\" font-size:14pt; font-weight:600; color:#e66643;\">defective</span><span style=\" font-size:14pt;\">AI calculates 「</span><span style=\" font-size:14pt; font-weight:600;\">normality</span><span style=\" font-size:14pt;\">」.Then if「</span><span style=\" font-size:14pt; font-weight:600;\">normality</span><span style=\" font-size:14pt;\">」is below threshold</span><span style=\" font-size:14pt; font-weight:600; color:#e66643;\">it's defective,</span><span style=\" font-size:14pt;\">above threshold</span><span style=\" font-size:14pt; font-weight:600; color:#3fda68;\">it's good.</span><span style=\" font-size:14pt;\">If the threshold value is set high, the criteria for determining a product</span><span style=\" font-size:14pt; font-weight:600; color:#e66643;\">as good become stricter,</span><span style=\" font-size:14pt;\">making it difficult to overlook</span><span style=\" font-size:14pt; font-weight:600; color:#3fda68;\">defective products.</span><span style=\" font-size:14pt;\">Adjust the threshold value well.</span></p></body></html>"))
+        self.performance_title_label.setText(_translate("Test", "Performance evaluation"))
+        self.accuracy_title_label.setText(_translate("Test", "Accuracy rate"))
         self.accuracy_label.setText(_translate("Test", "97%"))
-        self.false_positive_rate_title_label.setText(_translate("Test", "誤検知率"))
+        self.false_positive_rate_title_label.setText(_translate("Test", "False positive rate"))
         self.false_positive_rate_label.setText(_translate("Test", "2%"))
-        self.false_negative_rate_title_label.setText(_translate("Test", "見逃し率"))
+        self.false_negative_rate_title_label.setText(_translate("Test", "False negative rate"))
         self.false_negative_rate_label.setText(_translate("Test", "1%"))
-        self.details_button.setText(_translate("Test", "詳細"))
+        self.details_button.setText(_translate("Test", "Details"))
 
 from qrc import icon_rc

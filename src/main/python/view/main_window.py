@@ -164,7 +164,7 @@ class MainWindow(QMainWindow):
         self.ui.optimization_action.setDisabled(False)
 
     def on_start_training(self):
-        self.training_message.setText('トレーニング中')
+        self.training_message.setText('Training')
         self.loader_label.show()
         self.ui.inspection_action.setDisabled(True)
 

@@ -284,14 +284,14 @@ class Ui_inspection(object):
     def retranslateUi(self, inspection):
         _translate = QtCore.QCoreApplication.translate
         inspection.setWindowTitle(_translate("inspection", "Form"))
-        self.select_camera_button.setText(_translate("inspection", "表示するカメラを選択"))
-        self.inspect_button.setText(_translate("inspection", "撮影して判定"))
-        self.inspect_existing_image_button.setText(_translate("inspection", "既存の画像を判定"))
-        self.default_label.setText(_translate("inspection", "ここに判定結果が<br/>表示されます。"))
-        self.OK_message_label.setText(_translate("inspection", "この製品は良品です"))
-        self.NG_message_label.setText(_translate("inspection", "この製品は不良品です"))
+        self.select_camera_button.setText(_translate("inspection", "Select camera"))
+        self.inspect_button.setText(_translate("inspection", "Take Photo"))
+        self.inspect_existing_image_button.setText(_translate("inspection", "Photo Library"))
+        self.default_label.setText(_translate("inspection", "The inspection result <br/> is displayed here."))
+        self.OK_message_label.setText(_translate("inspection", "OK"))
+        self.NG_message_label.setText(_translate("inspection", "NG"))
         self.ng_score.setText(_translate("inspection", "<html><head/><body><p align=\"center\"><br/></p></body></html>"))
-        self.total_header_label.setText(_translate("inspection", "累計"))
+        self.total_header_label.setText(_translate("inspection", "Total"))
 
 from view.q_camera_view_finder_with_guide import QCameraViewFinderWithGuide
 from qrc import icon_rc

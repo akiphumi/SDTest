@@ -72,7 +72,7 @@ class InspectionWidget(QWidget):
 
     def on_clicked_select_camera_button(self):
         if not CameraModel.get_available_camera_names():
-            QMessageBox.warning(None, 'エラー', 'カメラが接続されていません', QMessageBox.Close)
+            QMessageBox.warning(None, 'error', 'Camera not connected', QMessageBox.Close)
             return
 
         if self.select_camera_widget.isHidden():
@@ -104,13 +104,13 @@ class InspectionWidget(QWidget):
         if score >= Project.latest_threshold():
             self.ui.result.setCurrentWidget(self.ui.OK)
             move(image_path, inspected_image_dir_path + '/OK_' + image_name)
-            self.ui.ok_score.setText('スコア: ' + str(score))
+            self.ui.ok_score.setText('Score: ' + str(score))
             self.ok_counter += 1
         else:
             ng_image = QPixmap(str(image_path))
             self.ui.ng_image.setPixmap(ng_image.scaled(self.ui.ng_image.size()))
             self.ui.result.setCurrentWidget(self.ui.NG)
-            self.ui.ng_score.setText('スコア: ' + str(score) + '\n閾値: ' +
+            self.ui.ng_score.setText('Score: ' + str(score) + '\nThreshold: ' +
                                      str(Project.latest_threshold()))
             move(image_path, inspected_image_dir_path + '/NG_' + image_name)
             self.ng_counter += 1

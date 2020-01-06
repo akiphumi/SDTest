@@ -38,9 +38,9 @@ class Ui_AIOptimization(object):
 
     def retranslateUi(self, AIOptimization):
         _translate = QtCore.QCoreApplication.translate
-        AIOptimization.setWindowTitle(_translate("AIOptimization", "学習"))
-        self.tab_widget.setTabText(self.tab_widget.indexOf(self.dataset_tab), _translate("AIOptimization", "データセットの管理とトレーニング"))
-        self.tab_widget.setTabText(self.tab_widget.indexOf(self.test_tab), _translate("AIOptimization", "性能評価"))
+        AIOptimization.setWindowTitle(_translate("AIOptimization", "Learning"))
+        self.tab_widget.setTabText(self.tab_widget.indexOf(self.dataset_tab), _translate("AIOptimization", "Dataset"))
+        self.tab_widget.setTabText(self.tab_widget.indexOf(self.test_tab), _translate("AIOptimization", "Performance report"))
 
 from view.dataset import DatasetWidget
 from view.test import TestWidget

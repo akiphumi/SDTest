@@ -77,7 +77,7 @@ class DatasetWidget(QWidget):
         image_paths = sorted(Dataset.images_path(category).iterdir())
         nullable_thumbnails = [Thumbnail(path=image_path) for image_path in image_paths]
         self.all_thumbnails = [thumbnail for thumbnail in nullable_thumbnails if not thumbnail.pixmap.isNull()]
-        self.ui.number_of_images_label.setText(f'{len(self.all_thumbnails)}枚')
+        self.ui.number_of_images_label.setText(f'{len(self.all_thumbnails)}images')
 
         row = 0
         column = 0
@@ -105,10 +105,10 @@ class DatasetWidget(QWidget):
             self.selected_thumbnails.remove(thumbnail)
 
         if self.selected_thumbnails:
-            number_of_images_description = f'{len(self.all_thumbnails)}枚 - {len(self.selected_thumbnails)}枚選択中'
+            number_of_images_description = f'{len(self.all_thumbnails)}images - {len(self.selected_thumbnails)}images selected'
             self.ui.delete_images_button.setEnabled(True)
         else:
-            number_of_images_description = f'{len(self.all_thumbnails)}枚'
+            number_of_images_description = f'{len(self.all_thumbnails)}images'
             self.ui.delete_images_button.setEnabled(False)
         self.ui.number_of_images_label.setText(number_of_images_description)
 
@@ -159,7 +159,7 @@ class DatasetWidget(QWidget):
     def on_clicked_delete_images_button(self):
         assert self.selected_thumbnails
 
-        message = f'{len(self.selected_thumbnails)}枚の画像を削除してよろしいですか?\nこの操作は取り消せません'
+        message = f'Are you sure you want to delete {len(self.selected_thumbnails)}images?\nThis action cannot be undone'
         selected_action = QMessageBox.warning(None, '', message, QMessageBox.Cancel, QMessageBox.Yes)
         if selected_action == QMessageBox.Yes:
             for selected_thumbnail in self.selected_thumbnails:
@@ -204,15 +204,15 @@ class DatasetWidget(QWidget):
         current_item = self.ui.image_list_widget.currentItem()
         current_item_text = current_item.text(0)
         # FIXME: refactor
-        if current_item_text == 'トレーニング用画像' or current_item_text == '性能評価用画像':
+        if current_item_text == 'Training images' or current_item_text == 'Test images':
             return None
-        elif current_item.parent().text(0) == 'トレーニング用画像':
-            if current_item_text == '良品':  # train_OK
+        elif current_item.parent().text(0) == 'Training images':
+            if current_item_text == 'Good product':  # train_OK
                 return Dataset.Category.TRAINING_OK
-        elif current_item.parent().text(0) == '性能評価用画像':
-            if current_item_text == '良品':  # test_OK
+        elif current_item.parent().text(0) == 'Test images':
+            if current_item_text == 'Good product':  # test_OK
                 return Dataset.Category.TEST_OK
-            elif current_item_text == '不良品':  # test_NG
+            elif current_item_text == 'Defective product':  # test_NG
                 return Dataset.Category.TEST_NG
         else:
             assert False
@@ -220,10 +220,10 @@ class DatasetWidget(QWidget):
     def __reload_recent_training_date(self):
         latest_training_date = Project.latest_training_date()
         if latest_training_date is None:
-            self.ui.latest_training_date_label.setText('トレーニング未実行')
+            self.ui.latest_training_date_label.setText('Training not performed')
         else:
             date_description = latest_training_date.strftime('%Y/%m/%d')
-            self.ui.latest_training_date_label.setText(f'前回のトレーニング：{date_description}')
+            self.ui.latest_training_date_label.setText(f'Previous training：{date_description}')
 
 
 class ThumbnailCell(QWidget):

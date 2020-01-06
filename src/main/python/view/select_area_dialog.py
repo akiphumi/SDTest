@@ -36,8 +36,8 @@ class SelectAreaDialog(QDialog):
         if self.size_flag:
             self.show_select_area_at_default_position()
         else:
-            self.ui.notation_label.setText('この画像サイズは十分小さいため, 画像全体でトレーニングを行います.'
-                                           '\nこのままトレーニング開始ボタンを押してください.')
+            self.ui.notation_label.setText('Since the image size is small enough, we will train on the whole image.'
+                                           '\nPlease push the training start button.')
             pass
 
         self.ui.ok_button.clicked.connect(self.on_clicked_ok_button)
@@ -95,7 +95,7 @@ class SelectAreaDialog(QDialog):
             position = (self.start_position.x()+rel_position.x(), self.start_position.y()+rel_position.y())
             if position[0] < 0 or position[0] > self.w - self.width - 1 or position[1] < 0 or position[1] > self.h - self.height - 1:
                 print('Error: Please set area contained in the image.')
-                self.ui.notation_label.setText('エラー: 切り取る領域は画像内に収まるようにしてください.')
+                self.ui.notation_label.setText('Error: crop area must fit within image.')
             else:
                 trimming_data = TrimmingData(position=position, size=(self.width, self.height), needs_trimming=True)
                 self.finish_selecting_area.emit(trimming_data)
@@ -113,7 +113,7 @@ class SelectAreaLabel(QLabel):
         self.label_palette = QPalette()
 
     def set_label(self):
-        self.setText('検査領域')
+        self.setText('Inspection area')
         self.setAutoFillBackground(True)
 
         # TODO: Check the appearance on win or not
