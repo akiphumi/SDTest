@@ -1,5 +1,5 @@
 from PyQt5.QtCore import pyqtSignal, QObject, QThread
-import socket
+from module import top16
 import threading
 
 
@@ -16,8 +16,8 @@ class ServingDobot(QObject):
 
     def __init__(self):
         QObject.__init__(self)
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect(('192.168.1.246', 8501))
+        top16.setup()
+        top16.queryVersion()
         self.is_waiting_req = True
         self.__waiting_dobot_req_thread = threading.Thread(target=self.waiting_dobot_req, daemon=True)
         self.__waiting_dobot_req_thread.start()
@@ -25,32 +25,19 @@ class ServingDobot(QObject):
     def waiting_dobot_req(self):
         self.is_waiting_req = True
         while self.is_waiting_req:
-            comand = "RD DM05000.U"
-            separator = "\r"
-            msg = comand + separator
-            self.socket.send(msg.encode("ascii"))
+            inputs = top16.getInputs()
+            print("Inputs = %d" % inputs)
 
-            message = self.socket.recv(1024)
-            message = int(message)
-
-            if message:
+            if inputs:
                 self.dobot_req.emit()
                 self.is_waiting_req = False
 
     def sending_inspection_result(self, result):
         if not self.is_waiting_req:
             if result:
-                comand = "WR DM05001.U 00001"
-                separator = "\r"  # 区切り符号CRの16進数表記
-                msg = comand + separator
-                self.socket.send(msg.encode("ascii"))
-                self.socket.recv(1024)
+                top16.setOutputs(1, 0xFF)
             else:
-                comand = "WR DM05001.U 00000"
-                separator = "\r"  # 区切り符号CRの16進数表記
-                msg = comand + separator
-                self.socket.send(msg.encode("ascii"))
-                self.socket.recv(1024)
+                top16.setOutputs(0, 0xFF)
             self.__waiting_dobot_req_thread = threading.Thread(target=self.waiting_dobot_req, daemon=True)
             self.__waiting_dobot_req_thread.start()
 
