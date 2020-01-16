@@ -4,8 +4,9 @@ from datetime import datetime
 import threading
 from PyQt5.QtCore import pyqtSignal, QObject, QTimer
 from PyQt5.QtGui import QImage
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 import queue, cv2, copy
-import uvc
 
 
 class CameraModel(QObject):
@@ -22,11 +23,11 @@ class CameraModel(QObject):
             cls.__default_instance = CameraModel()
         return cls.__default_instance
 
-    @classmethod
-    def get_available_camera_names(cls) -> list:
+    # @classmethod
+    def get_available_camera_names(self) -> list:
         # print(uvc.device_list())
         # uvc.Capture(uvc.device_list()[0]["uid"])
-        return [device_info['name'] for device_info in uvc.device_list() if device_info['name'] is not "unknown"]
+        return self.__old_device_list
         # return [QCamera.deviceDescription(device_obj) for device_obj in QCamera.availableDevices()]
 
     def __init__(self):
@@ -51,29 +52,25 @@ class CameraModel(QObject):
             print('No default camera')
 
     def __fetch_cam(self):
-        for i, device in enumerate(uvc.device_list()):
-            if device['name'] not in self.__old_device_list and device['name'] is not "unknown":
-                self.__queues[device['name']] = queue.Queue()
-                cam = uvc.Capture(device["uid"])
-                self.cams[device['name']] = cam
-                print(cam.avaible_modes)
-                controller_dict = dict([(c.display_name, c) for c in cam.controls])
-                print(controller_dict.keys())
-                if 'Auto Focus' in controller_dict:
-                    controller_dict['Auto Focus'].value = 1
-                print(device['name'])
-                self.is_running = True
-                self.uvc_thread = threading.Thread(target=self.grab_uvc, args=(device['name'], cam), daemon=True)
-                self.uvc_thread.start()
-                self.__old_device_list.append(device['name'])
+        if not self.__old_device_list:
+            cam = PiCamera()
+            self.cams[cam.revision] = cam
+            print(cam.revision)
+            self.is_running = True
+            self.uvc_thread = threading.Thread(target=self.grab_uvc, args=(cam.revision, cam), daemon=True)
+            self.uvc_thread.start()
+            self.__old_device_list.append(cam.revision)
 
     def grab_uvc(self, device_name, uvc_capture):
-        width, height, fps = uvc_capture.avaible_modes[0]
+        width, height, fps = 640, 480, 90
         print((width, height, fps))
-        uvc_capture.frame_mode = (width, height, fps)
+        uvc_capture.resolution = (width, height)
+        uvc_capture.framerate = fps
+        rawCapture = PiRGBArray(uvc_capture, size=(width, height))
         while self.is_running:
-            frame = uvc_capture.get_frame_robust()
-            self.images[device_name] = frame.img
+            uvc_capture.capture(rawCapture, format="bgr", use_video_port=True)
+            self.images[device_name] = rawCapture.array
+            rawCapture.truncate(0)
 
     def img_converter(self, image):
         image_preview = copy.copy(cv2.cvtColor(image, cv2.COLOR_BGR2BGRA))
