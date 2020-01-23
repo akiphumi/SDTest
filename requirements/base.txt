@@ -9,6 +9,7 @@ GitPython
 pyod
 jinja2
 picamera
+pylibftdi
 
 ###### Requirements with Version Specifiers ######
 fbs[sentry] == 0.8.3

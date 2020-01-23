@@ -2,6 +2,7 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from model.camera_model import CameraModel
 from model.project import Project
 from model.learning_model import LearningModel
+from model.serving_dobot import ServingDobot
 from view.ui.inspection import Ui_inspection
 from view.camera_list import CameraList
 from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog
@@ -16,6 +17,7 @@ class InspectionWidget(QWidget):
 
     # this signal emit on shortage of ai models
     model_file_not_found_error = pyqtSignal()
+    inspection_finished = pyqtSignal(bool)
     __INSPECTED_IMAGES_DIR_NAME = '/inspection_results/images'
 
     def __init__(self):
@@ -26,6 +28,10 @@ class InspectionWidget(QWidget):
         self.camera_model = CameraModel.default()
         self.camera_model.set_selected_camera_to_view_finder(self.ui.camera_preview)
         self.camera_model.image_saved.connect(self.on_image_saved)
+
+        self.serving_dobot = ServingDobot()
+        self.serving_dobot.dobot_req.connect(self.on_clicked_inspect_button)
+        self.inspection_finished.connect(self.serving_dobot.sending_inspection_result)
 
         self.learning_model = LearningModel.default()
         self.learning_model.predicting_finished.connect(self.on_finished_predicting)
@@ -101,6 +107,7 @@ class InspectionWidget(QWidget):
         inspected_image_dir_path = Project.project_path() + self.__INSPECTED_IMAGES_DIR_NAME
         score = result['scores'][0]
         self.ui.loader_label.clear()
+        self.inspection_finished.emit(score >= Project.latest_threshold())
         if score >= Project.latest_threshold():
             self.ui.result.setCurrentWidget(self.ui.OK)
             move(image_path, inspected_image_dir_path + '/OK_' + image_name)
