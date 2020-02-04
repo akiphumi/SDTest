@@ -5,13 +5,16 @@ import numpy as np
 
 from sklearn.decomposition import PCA
 from keras import backend as K
-from keras.models import Model
+from keras.models import Model, load_model
 from keras.layers import GlobalAveragePooling2D, GlobalMaxPooling2D, Flatten
 import numpy as np
 import imageio
 import skimage.transform
 import joblib
 import pyod
+import cv2
+from keras.preprocessing.image import img_to_array, load_img
+import tensorflow as tf
 
 
 class NoveltyDetector:
@@ -72,6 +75,7 @@ class NoveltyDetector:
         This method should be called after loading images to set input shape.
         """
         self.input_shape = input_shape
+        self.graph = None
         print('Input image size is', self.input_shape)
 
         if self.nn_name == 'Xception':
@@ -123,6 +127,7 @@ class NoveltyDetector:
             raise Exception('0 < nth_layer < {}'.format(len_pretrained_nn))
 
         self.extracting_model = self._get_nth_layer(self.nth_layer, self.pretrained_nn)
+        self.graph = tf.get_default_graph()
         return self.extracting_model
 
     def _get_nth_layer(self, nth_layer, nn_model):
@@ -171,7 +176,8 @@ class NoveltyDetector:
         """
         if self.extracting_model is None:
             self._load_NN_model(imgs[0].shape)
-        feature = self.extracting_model.predict(imgs)
+        with self.graph.as_default():
+            feature = self.extracting_model.predict(imgs)
         if self.pca_n_components:
             pca = PCA(n_components=self.pca_n_components)
             feature = pca.fit_transform(feature)

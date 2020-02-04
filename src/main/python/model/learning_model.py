@@ -5,6 +5,7 @@ from model.project import Project
 import threading, os, shutil, numpy as np
 from statistics import stdev, mean
 from math import sqrt
+from model.grad_cam import GradCam
 
 class TestResults(object):
     def __init__(self):
@@ -140,6 +141,7 @@ class LearningModel(QObject):
         self.__should_test = True  # TODO: assign True on dataset change
         self.test_results = TestResults()
         self.__training_thread = None
+        self.__grad_cam = GradCam()
 
     @property
     def threshold(self) -> float:
@@ -179,7 +181,11 @@ class LearningModel(QObject):
 
     def predict(self, image_paths):
         scores = self.__model.predict_paths(image_paths)
-        self.predicting_finished.emit({'scores': scores, 'image_paths': image_paths})
+        if scores[0] >= Project.latest_threshold():
+            self.predicting_finished.emit({'scores': scores, 'image_paths': image_paths})
+        else:
+            jetcam = self.__grad_cam.predict_paths(image_paths)
+            self.predicting_finished.emit({'scores': scores, 'image_paths': image_paths, 'jetcam': jetcam})
 
     def test_if_needed(self, predict_training=False):
         if not self.__should_test:

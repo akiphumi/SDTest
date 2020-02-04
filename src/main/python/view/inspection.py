@@ -11,6 +11,8 @@ from shutil import move, copy2
 import os
 import pathlib
 from datetime import datetime
+from keras.preprocessing.image import array_to_img
+from PIL.ImageQt import ImageQt
 
 
 class InspectionWidget(QWidget):
@@ -115,7 +117,10 @@ class InspectionWidget(QWidget):
             self.ui.ok_score.setText('スコア: ' + str(score))
             self.ok_counter += 1
         else:
-            ng_image = QPixmap(str(image_path))
+            # ng_image = QPixmap(str(image_path))
+            ng_image = array_to_img(result['jetcam'])
+            qimage = ImageQt(ng_image)
+            ng_image = QPixmap.fromImage(qimage)
             self.ui.ng_image.setPixmap(ng_image.scaled(self.ui.ng_image.size()))
             self.ui.result.setCurrentWidget(self.ui.NG)
             self.ui.ng_score.setText('スコア: ' + str(score) + '\n閾値: ' +
