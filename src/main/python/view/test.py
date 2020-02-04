@@ -35,16 +35,16 @@ class TestWidget(QWidget):
         self.ui.threshold_slider.valueChanged.connect(self.on_threshold_changed)
         self.ui.details_button.clicked.connect(self.on_clicked_details_button)
 
-        self.distance_figure: Figure = plt.figure(figsize=(4, 3))
+        self.distance_figure: Figure = plt.figure(figsize=(3.7, 2.3))
         self.distance_canvas = FigureCanvas(self.distance_figure)
         self.distance_canvas.setParent(self.ui.distance_chart_widget)
         # sns.set_palette(['#3FDA68', '#E66643'])
 
-        performance_figure = Figure(figsize=(3.5, 3.5))
+        performance_figure = Figure(figsize=(3, 3))
         self.performance_axes: Axes = performance_figure.add_subplot(111)
         performance_figure.patch.set_alpha(0)
-        self.performance_axes.set_position(pos=[-0.1, 0.1, 1, 1])  # FIXME: adjust position automatically
-        self.performance_center_circle = plt.Circle(xy=(0, 0), radius=0.75, fc='#F5F5F5', linewidth=1.25)
+        self.performance_axes.set_position(pos=[0, 0.1, 1, 1])  # FIXME: adjust position automatically
+        self.performance_center_circle = plt.Circle(xy=(0, 0), radius=0.6, fc='#F5F5F5', linewidth=1.25)
         self.performance_canvas = FigureCanvas(performance_figure)
         self.performance_canvas.setParent(self.ui.performance_chart_widget)
 
@@ -61,6 +61,7 @@ class TestWidget(QWidget):
         # reload distance chart
         plt.clf()
         sns.set()
+        sns.set_context("paper")
         if show_training:
             sns.distplot(results.distances_of_train_images, kde=False, rug=False, hist_kws=dict(alpha=1, linewidth=0), label='TRAIN OK', color='b')
         sns.distplot(results.distances_of_ok_images, kde=False, rug=False, hist_kws=dict(alpha=1, linewidth=0), label='TEST OK', color='g')  # FIXME: label

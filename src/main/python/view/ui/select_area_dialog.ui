@@ -22,21 +22,11 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>領域を選択</string>
+   <string>Select area</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'.Hiragino Kaku Gothic Interface';&quot;&gt;傷や汚れ等、欠陥が発生しやすい領域&lt;/span&gt;を指定してください。&lt;br/&gt;検品の際、画像内の指定された領域に異常がないか検証し、良品か不良品かを判定します。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="scaledContents">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
@@ -91,14 +81,14 @@
        <item>
         <widget class="QPushButton" name="cancel_button">
          <property name="text">
-          <string>キャンセル</string>
+          <string>Cancel</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="ok_button">
          <property name="text">
-          <string>トレーニング開始</string>
+          <string>Start training</string>
          </property>
          <property name="default">
           <bool>true</bool>

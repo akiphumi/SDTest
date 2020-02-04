@@ -36,13 +36,13 @@ class MainWindow(QMainWindow):
 
         self.msgBox = None
 
-        self.inspection_mainwindow_size = QSize(780, 550)
-        self.optimization_mainwindow_size = QSize(864, 730)
-        self.past_result_mainwindow_size = QSize(780, 600)
+        self.inspection_mainwindow_size = QSize(800, 440)
+        self.optimization_mainwindow_size = QSize(800, 440)
+        self.past_result_mainwindow_size = QSize(800, 440)
 
-        self.inspection_widget_size = QSize(740, 420)
-        self.optimization_widget_size = QSize(840, 600)
-        self.past_result_widget_size = QSize(740, 400)
+        self.inspection_widget_size = QSize(759, 336)
+        self.optimization_widget_size = QSize(778, 362)
+        self.past_result_widget_size = QSize(759, 293)
 
         self.setup_tool_bar()
         self.setup_menu_bar()

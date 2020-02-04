@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'select_area_dialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -24,10 +24,6 @@ class Ui_SelectAreaDialog(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.label = QtWidgets.QLabel(SelectAreaDialog)
-        self.label.setScaledContents(False)
-        self.label.setObjectName("label")
-        self.verticalLayout_2.addWidget(self.label)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.original_image_view = QtWidgets.QGraphicsView(SelectAreaDialog)
@@ -68,7 +64,6 @@ class Ui_SelectAreaDialog(object):
     def retranslateUi(self, SelectAreaDialog):
         _translate = QtCore.QCoreApplication.translate
         SelectAreaDialog.setWindowTitle(_translate("SelectAreaDialog", "Select area"))
-        self.label.setText(_translate("SelectAreaDialog", "<html><head/><body><p><span style=\" font-family:\'.Hiragino Kaku Gothic Interface\';\">Specify the area </span> where defects are likely to occur.<br/>The specified area in the image is verified for abnormalities, and it is determined whether it is good or defective.</p></body></html>"))
         self.cancel_button.setText(_translate("SelectAreaDialog", "Cancel"))
         self.ok_button.setText(_translate("SelectAreaDialog", "Start training"))
 

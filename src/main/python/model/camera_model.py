@@ -103,7 +103,7 @@ class CameraModel(QObject):
             self.on_image_saved(image_path)
 
     def on_image_saved(self, image_path):
-        RESIZED_WIDTH = 640
+        RESIZED_WIDTH = 320
         img = cv2.imread(image_path)
         img_height, img_width, _ = img.shape
         RESIZED_HEIGHT = int(RESIZED_WIDTH / img_width * img_height)
