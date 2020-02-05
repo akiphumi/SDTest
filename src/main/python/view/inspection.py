@@ -34,7 +34,6 @@ class InspectionWidget(QWidget):
         self.select_camera_widget.clicked.connect(self.on_clicked_camera_list)
         self.select_camera_widget.closed.connect(self.on_closed_camera_list)
 
-        self.ui.select_camera_button.clicked.connect(self.on_clicked_select_camera_button)
         self.ui.inspect_button.clicked.connect(self.on_clicked_inspect_button)
 
         self.ui.inspect_existing_image_button.clicked.connect(self.on_clicked_inspection_existing_image_button)
