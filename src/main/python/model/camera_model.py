@@ -7,6 +7,7 @@ from PyQt5.QtGui import QImage
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import queue, cv2, copy
+import time
 
 
 class CameraModel(QObject):
@@ -66,11 +67,13 @@ class CameraModel(QObject):
         print((width, height, fps))
         uvc_capture.resolution = (width, height)
         uvc_capture.framerate = fps
-        rawCapture = PiRGBArray(uvc_capture, size=(width, height))
+        capture = PiRGBArray(uvc_capture, size=(width, height))
+        stream = uvc_capture.capture_continuous(capture, format="bgr", use_video_port=True)
+        time.sleep(2.0)
         while self.is_running:
-            uvc_capture.capture(rawCapture, format="bgr", use_video_port=True)
-            self.images[device_name] = rawCapture.array
-            rawCapture.truncate(0)
+            frame = stream.__next__()
+            self.images[device_name] = frame.array
+            capture.truncate(0)
 
     def img_converter(self, image):
         image_preview = copy.copy(cv2.cvtColor(image, cv2.COLOR_BGR2BGRA))
