@@ -55,6 +55,7 @@ class CameraModel(QObject):
     def __fetch_cam(self):
         if not self.__old_device_list:
             cam = PiCamera()
+            PiCamera.CAPTURE_TIMEOUT = 60
             self.cams[cam.revision] = cam
             print(cam.revision)
             self.is_running = True
@@ -66,8 +67,8 @@ class CameraModel(QObject):
         width, height, fps = 640, 480, 90
         print((width, height, fps))
         uvc_capture.resolution = (width, height)
-        uvc_capture.framerate = fps
-        capture = PiRGBArray(uvc_capture, size=(width, height))
+        # uvc_capture.framerate = fps
+        capture = PiRGBArray(uvc_capture)
         stream = uvc_capture.capture_continuous(capture, format="bgr", use_video_port=True)
         time.sleep(2.0)
         while self.is_running:
