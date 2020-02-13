@@ -1,4 +1,4 @@
 ###### Requirements without Version Specifiers ######
 
 ###### Requirements with Version Specifiers ######
-.\requirements\uvc-0.13-cp37-cp37m-linux_armv7l.whl
+./requirements/uvc-0.13-cp37-cp37m-linux_armv7l.whl
