@@ -3,7 +3,6 @@ matplotlib
 sklearn
 joblib
 seaborn
-numpy
 pyqtdeploy
 opencv-contrib-python
 GitPython
@@ -20,3 +19,4 @@ tensorflow == 1.5.*
 keras == 2.*
 imageio == 2.*
 scikit-image == 0.*
+numpy == 1.17.5
