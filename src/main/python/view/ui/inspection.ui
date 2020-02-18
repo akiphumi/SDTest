@@ -81,64 +81,17 @@ min-height: 100px;
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="horizontalWidget" native="true">
-         <property name="minimumSize">
+        <spacer name="verticalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>20</width>
+           <height>20</height>
           </size>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="select_camera_button">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>表示するカメラを選択</string>
-            </property>
-            <property name="shortcut">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
+        </spacer>
        </item>
        <item>
         <widget class="QWidget" name="horizontalWidget" native="true">
@@ -177,14 +130,14 @@ min-height: 100px;
           <item>
            <widget class="QPushButton" name="inspect_button">
             <property name="text">
-             <string>撮影して判定</string>
+             <string>Take Photo</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="inspect_existing_image_button">
             <property name="text">
-             <string>既存の画像を判定</string>
+             <string>Photo Library</string>
             </property>
            </widget>
           </item>
@@ -248,7 +201,7 @@ min-height: 100px;
           <string notr="true">margin: 0px;</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="default_result">
           <property name="autoFillBackground">
@@ -276,7 +229,7 @@ border:none;
 </string>
              </property>
              <property name="text">
-              <string>ここに判定結果が&lt;br/&gt;表示されます。</string>
+              <string>The inspection result &lt;br/&gt; is displayed here.</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -343,7 +296,7 @@ background-color: transparent;
 border: none;</string>
              </property>
              <property name="text">
-              <string>この製品は良品です</string>
+              <string>OK</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -486,7 +439,7 @@ border: none;
 background-color: transparent;</string>
              </property>
              <property name="text">
-              <string>この製品は不良品です</string>
+              <string>NG</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -552,7 +505,7 @@ border:none;
 </string>
             </property>
             <property name="text">
-             <string>累計</string>
+             <string>Total</string>
             </property>
            </widget>
           </item>

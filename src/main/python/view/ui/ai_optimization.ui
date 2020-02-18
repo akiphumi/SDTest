@@ -12,8 +12,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>842</width>
-    <height>532</height>
+    <width>780</width>
+    <height>321</height>
    </size>
   </property>
   <property name="font">
@@ -22,7 +22,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>学習</string>
+   <string>Learning</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -41,7 +41,7 @@
        <string notr="true"/>
       </property>
       <attribute name="title">
-       <string>データセットの管理とトレーニング</string>
+       <string>Dataset</string>
       </attribute>
      </widget>
      <widget class="TestWidget" name="test_tab">
@@ -49,7 +49,7 @@
        <string notr="true"/>
       </property>
       <attribute name="title">
-       <string>性能評価</string>
+       <string>Performance report</string>
       </attribute>
      </widget>
     </widget>

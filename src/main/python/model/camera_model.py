@@ -7,6 +7,7 @@ from PyQt5.QtGui import QImage
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import queue, cv2, copy
+import time
 
 
 class CameraModel(QObject):
@@ -54,6 +55,7 @@ class CameraModel(QObject):
     def __fetch_cam(self):
         if not self.__old_device_list:
             cam = PiCamera()
+            PiCamera.CAPTURE_TIMEOUT = 60
             self.cams[cam.revision] = cam
             print(cam.revision)
             self.is_running = True
@@ -65,12 +67,14 @@ class CameraModel(QObject):
         width, height, fps = 640, 480, 90
         print((width, height, fps))
         uvc_capture.resolution = (width, height)
-        uvc_capture.framerate = fps
-        rawCapture = PiRGBArray(uvc_capture, size=(width, height))
+        # uvc_capture.framerate = fps
+        capture = PiRGBArray(uvc_capture)
+        stream = uvc_capture.capture_continuous(capture, format="bgr", use_video_port=True)
+        time.sleep(2.0)
         while self.is_running:
-            uvc_capture.capture(rawCapture, format="bgr", use_video_port=True)
-            self.images[device_name] = rawCapture.array
-            rawCapture.truncate(0)
+            frame = stream.__next__()
+            self.images[device_name] = frame.array
+            capture.truncate(0)
 
     def img_converter(self, image):
         image_preview = copy.copy(cv2.cvtColor(image, cv2.COLOR_BGR2BGRA))
@@ -103,7 +107,7 @@ class CameraModel(QObject):
             self.on_image_saved(image_path)
 
     def on_image_saved(self, image_path):
-        RESIZED_WIDTH = 640
+        RESIZED_WIDTH = 320
         img = cv2.imread(image_path)
         img_height, img_width, _ = img.shape
         RESIZED_HEIGHT = int(RESIZED_WIDTH / img_width * img_height)

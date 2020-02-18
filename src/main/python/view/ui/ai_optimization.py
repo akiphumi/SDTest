@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ai_optimization.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ class Ui_AIOptimization(object):
     def setupUi(self, AIOptimization):
         AIOptimization.setObjectName("AIOptimization")
         AIOptimization.resize(842, 532)
-        AIOptimization.setMinimumSize(QtCore.QSize(842, 532))
+        AIOptimization.setMinimumSize(QtCore.QSize(780, 321))
         font = QtGui.QFont()
         font.setPointSize(9)
         AIOptimization.setFont(font)
