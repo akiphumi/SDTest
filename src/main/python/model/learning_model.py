@@ -181,11 +181,8 @@ class LearningModel(QObject):
 
     def predict(self, image_paths):
         scores = self.__model.predict_paths(image_paths)
-        if scores[0] >= Project.latest_threshold():
-            self.predicting_finished.emit({'scores': scores, 'image_paths': image_paths})
-        else:
-            jetcam = self.__grad_cam.predict_paths(image_paths)
-            self.predicting_finished.emit({'scores': scores, 'image_paths': image_paths, 'jetcam': jetcam})
+        jetcam = self.__grad_cam.predict_paths(image_paths)
+        self.predicting_finished.emit({'scores': scores, 'image_paths': image_paths, 'jetcam': jetcam})
 
     def test_if_needed(self, predict_training=False):
         if not self.__should_test:

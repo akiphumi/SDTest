@@ -14,9 +14,6 @@ import cmapy
 
 
 class GradCam:
-    @staticmethod
-    def loadmodel(path):
-        return load_model(path)
 
     def __init__(self):
         self.input_shape = None
@@ -34,7 +31,7 @@ class GradCam:
         weights_path = pathlib.Path("./main/python/module/weights.h5")
         if weights_path.is_file():
             path = weights_path.resolve()
-            self.model = self.loadmodel(str(path))
+            self.model = load_model(str(path))
             self.graph = tf.get_default_graph()
 
         return self.model
