@@ -70,7 +70,7 @@ class CameraModel(QObject):
         # uvc_capture.framerate = fps
         capture = PiRGBArray(uvc_capture)
         stream = uvc_capture.capture_continuous(capture, format="bgr", use_video_port=True)
-        time.sleep(2.0)
+        # time.sleep(2.0)
         while self.is_running:
             frame = stream.__next__()
             self.images[device_name] = frame.array

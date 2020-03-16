@@ -28,7 +28,10 @@ class ServingDobot(QObject):
             inputs = top16.getInputs()
             print("Inputs = %d" % inputs)
 
-            if inputs:
+            inputs = bin(inputs)
+            inputs = inputs[-2:]
+
+            if inputs == '10':
                 self.dobot_req.emit()
                 self.is_waiting_req = False
 
@@ -37,6 +40,6 @@ class ServingDobot(QObject):
             if result:
                 top16.setOutputs(1, 0xFF)
             else:
-                top16.setOutputs(0, 0xFF)
+                top16.setOutputs(2, 0xFF)
             self.__waiting_dobot_req_thread = threading.Thread(target=self.waiting_dobot_req, daemon=True)
             self.__waiting_dobot_req_thread.start()
