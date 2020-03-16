@@ -1,5 +1,6 @@
 import glob
 import os
+import pathlib
 import numpy as np
 
 from sklearn.decomposition import PCA
@@ -14,7 +15,7 @@ import pyod
 
 class NoveltyDetector:
 
-    def __init__(self, nth_layer=24, nn_name='ResNet', detector_name='kNN', pool=None, pca_n_components=None):
+    def __init__(self, nth_layer=18, nn_name='vgg', detector_name='svm', pool=None, pca_n_components=None):
         """
         Extract feature by neural network and detector train normal samples then predict new data
         nn_name: 'Xception', 'ResNet'(Default), 'InceptionV3',
@@ -57,6 +58,13 @@ class NoveltyDetector:
             from pyod.models.knn import KNN
             self.clf = KNN(method='median', contamination=0.1)
             print('Novelty Detector: Median K Nearest Neighbors')
+        elif detector_name_lower == 'svm':
+            from sklearn.svm import OneClassSVM
+            self.clf = OneClassSVM(gamma='scale')
+            print('SVM')
+        else:
+            print(self.detector_name_lower)
+            raise ValueError
 
     def _load_NN_model(self, input_shape=(229, 229, 3)):
         """
@@ -94,12 +102,21 @@ class NoveltyDetector:
             from keras.applications.nasnet import NASNetLarge
             pretrained_func = NASNetLarge
             print('Neural Network: {}'.format(self.nn_name))
-        else:# self.nn_name == 'ResNet':
+        elif self.nn_name == 'vgg':
+            from keras.applications.vgg16 import VGG16
+            pretrained_func = VGG16
+            print('VGG')
+        elif self.nn_name == 'ResNet':
             from keras.applications.resnet50 import ResNet50
             pretrained_func = ResNet50
             print('Neural Network: {}'.format(self.nn_name))
 
-        self.pretrained_nn = pretrained_func(include_top=False, weights='imagenet', input_tensor=None, input_shape=self.input_shape, pooling=False)
+        weights_path = pathlib.Path("./main/python/module/weights.h5")
+        if weights_path.is_file():
+            self.pretrained_nn = pretrained_func(include_top=False, weights=None, input_tensor=None, input_shape=self.input_shape, pooling=False)
+            self.pretrained_nn.load_weights(weights_path.resolve(), by_name=True)
+        else:
+            self.pretrained_nn = pretrained_func(include_top=False, weights='imagenet', input_tensor=None, input_shape=self.input_shape, pooling=False)
         
         len_pretrained_nn = len(self.pretrained_nn.layers)
         if not 0 < self.nth_layer < len_pretrained_nn:
