@@ -111,7 +111,7 @@ class NoveltyDetector:
             pretrained_func = ResNet50
             print('Neural Network: {}'.format(self.nn_name))
 
-        weights_path = pathlib.Path("./main/python/module/weights.h5")
+        weights_path = pathlib.Path("./src/main/python/module/weights.h5")
         if weights_path.is_file():
             self.pretrained_nn = pretrained_func(include_top=False, weights=None, input_tensor=None, input_shape=self.input_shape, pooling=False)
             self.pretrained_nn.load_weights(weights_path.resolve(), by_name=True)
