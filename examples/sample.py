@@ -169,7 +169,7 @@ def execute_cmdline():
         testng_features = model.extracting_model.predict(testng_imgs)
 
         tsne = TSNE(n_components=2)
-        concat = np.concatenate([train_ok_features, testok_features, testng_features])
+        concat = np.concatenate([trainok_features, testok_features, testng_features])
         transformed = tsne.fit_transform(concat)
         train_ok2 = transformed[:len(trainok_features)]
         test_ok2 = transformed[len(trainok_features):len(testok_features)]
