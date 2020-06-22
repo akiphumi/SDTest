@@ -24,14 +24,12 @@ class ServingDobot(QObject):
 
     def waiting_dobot_req(self):
         self.is_waiting_req = True
+        top16.setOutputs(0, 0xFF)
         while self.is_waiting_req:
             inputs = top16.getInputs()
             print("Inputs = %d" % inputs)
 
-            inputs = bin(inputs)
-            inputs = inputs[-2:]
-
-            if inputs == '10':
+            if inputs:
                 self.dobot_req.emit()
                 self.is_waiting_req = False
 
