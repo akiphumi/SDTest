@@ -7,6 +7,7 @@ from sklearn.decomposition import PCA
 from keras import backend as K
 from keras.models import Model
 from keras.layers import GlobalAveragePooling2D, GlobalMaxPooling2D, Flatten
+from model.project import Project
 import numpy as np
 import imageio
 import skimage.transform
@@ -16,7 +17,7 @@ import pyod
 
 class NoveltyDetector:
 
-    def __init__(self, nth_layer=18, nn_name='vgg', detector_name='svm', pool=None, pca_n_components=None):
+    def __init__(self, nth_layer=18, nn_name='lobe', detector_name='svm', pool=None, pca_n_components=None):
         """
         Extract feature by neural network and detector train normal samples then predict new data
         nn_name: 'Xception', 'ResNet'(Default), 'InceptionV3',
@@ -106,43 +107,17 @@ class NoveltyDetector:
             from keras.applications.vgg16 import VGG16
             pretrained_func = VGG16
             print('VGG')
+        elif self.nn_name == 'lobe':
+            from lobe import ImageModel
+            model = ImageModel.load(Project.project_path() + '/models/')
+            print('lobe')
         elif self.nn_name == 'ResNet':
             from keras.applications.resnet50 import ResNet50
             pretrained_func = ResNet50
             print('Neural Network: {}'.format(self.nn_name))
 
-        weights_path = pathlib.Path("./main/python/module/weights.h5")
-        if weights_path.is_file():
-            self.pretrained_nn = pretrained_func(include_top=False, weights=None, input_tensor=None, input_shape=self.input_shape, pooling=False)
-            self.pretrained_nn.load_weights(weights_path.resolve(), by_name=True)
-        else:
-            self.pretrained_nn = pretrained_func(include_top=False, weights='imagenet', input_tensor=None, input_shape=self.input_shape, pooling=False)
-
-        len_pretrained_nn = len(self.pretrained_nn.layers)
-        if not 0 < self.nth_layer < len_pretrained_nn:
-            raise Exception('0 < nth_layer < {}'.format(len_pretrained_nn))
-
-        self.extracting_model = self._get_nth_layer(self.nth_layer, self.pretrained_nn)
+        self.extracting_model = model
         return self.extracting_model
-
-    def _get_nth_layer(self, nth_layer, nn_model):
-        model = Model(inputs=nn_model.input, outputs=nn_model.layers[nth_layer].output)
-        if len(model.output_shape) <= 2:
-            return model
-
-        if self.pool is None:
-            x = model.output
-            x = Flatten()(x)
-            return Model(inputs=model.input, outputs=x)
-        elif self.pool == 'average':
-            x = model.output
-            x = GlobalAveragePooling2D()(x)
-            return Model(inputs=model.input, outputs=x)
-        elif self.pool == 'max':
-            x = model.output
-            x = GlobalMaxPooling2D()(x)
-            return Model(inputs=model.input, outputs=x)
-        return model
 
     def fit(self, imgs):
         self._load_NN_model(imgs[0].shape)
@@ -170,17 +145,19 @@ class NoveltyDetector:
         paths -- list of image paths like [./dir/img1.jpg, ./dir/img2.jpg, ...]
         """
         if self.extracting_model is None:
-            self._load_NN_model(imgs[0].shape)
-        feature = self.extracting_model.predict(imgs)
+            self._load_NN_model(imgs[0].size)
+        feature = self.extracting_model.predict(imgs[0])
+        print(feature.prediction)
         if self.pca_n_components:
             pca = PCA(n_components=self.pca_n_components)
             feature = pca.fit_transform(feature)
-        predicted_scores = self.clf.decision_function(feature)
+        predicted_scores = feature.labels[0][1]
+        print(predicted_scores)
 
         if self.clf.__module__.startswith('pyod.models'):
             # Tricky, the higher pyod's predicts score, the more likely anormaly. We want higher the score,  more likely normal.
             predicted_scores *= -1
-        return predicted_scores
+        return predicted_scores, feature.prediction
 
     def predict_paths(self, paths):
         imgs = self._read_imgs(paths)
@@ -196,13 +173,10 @@ class NoveltyDetector:
         if self.input_shape is None:
             self.input_shape = imageio.imread(paths[0], as_gray=False, pilmode='RGB').shape
         imgs = []
+        from PIL import Image
         for path in paths:
-            img = imageio.imread(path, as_gray=False, pilmode='RGB').astype(np.float)
-            img = skimage.transform.resize(img, self.input_shape[:2])
-            img /= 255
+            img = Image.open(path)
             imgs.append(img)
-        imgs = np.array(imgs)
-        imgs = imgs.reshape(-1, *self.input_shape)
         return imgs
 
     def _get_paths_in_dir(self, dir_path):

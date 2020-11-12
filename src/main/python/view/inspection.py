@@ -107,19 +107,20 @@ class InspectionWidget(QWidget):
         image_path = result['image_paths'][0]
         image_name = os.path.basename(image_path)
         inspected_image_dir_path = Project.project_path() + self.__INSPECTED_IMAGES_DIR_NAME
-        score = result['scores'][0]
+        score = result['scores']
+        prediction = result['prediction']
         self.ui.loader_label.clear()
-        if score >= Project.latest_threshold():
+        if prediction == 'good':
             self.ui.result.setCurrentWidget(self.ui.OK)
             move(image_path, inspected_image_dir_path + '/OK_' + image_name)
-            self.ui.ok_score.setText('スコア: ' + str(score))
+            self.ui.ok_score.setText('スコア: ' + '{:.2%}'.format(score))
             self.ok_counter += 1
         else:
             ng_image = QPixmap(str(image_path))
             self.ui.ng_image.setPixmap(ng_image.scaled(self.ui.ng_image.size()))
             self.ui.result.setCurrentWidget(self.ui.NG)
-            self.ui.ng_score.setText('スコア: ' + str(score) + '\n閾値: ' +
-                                     str(Project.latest_threshold()))
+            self.ui.ng_score.setText('スコア: ' + '{:.2%}'.format(score) + '\n判定: ' +
+                                     prediction)
             move(image_path, inspected_image_dir_path + '/NG_' + image_name)
             self.ng_counter += 1
         self.ui.inspect_button.setDisabled(False)

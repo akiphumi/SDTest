@@ -3,7 +3,6 @@ matplotlib
 sklearn
 joblib
 seaborn
-numpy
 pyqtdeploy
 opencv-contrib-python
 GitPython
@@ -13,9 +12,10 @@ opencv-python
 
 ###### Requirements with Version Specifiers ######
 fbs[sentry] == 0.8.3
-PyQt5 == 5.10
+PyQt5 == 5.13.*
+PyQtWebEngine == 5.13.*
 PyInstaller == 3.4
-tensorflow == 1.5.*
-keras == 2.*
+tensorflow == 1.15.*
+keras == 2.2.*
 imageio == 2.*
 scikit-image == 0.*

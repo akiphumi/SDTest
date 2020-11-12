@@ -33,7 +33,6 @@ class DatasetWidget(QWidget):
 
         self.ui.image_list_widget.itemSelectionChanged.connect(self.on_changed_image_list_selection)
         self.ui.delete_images_button.clicked.connect(self.on_clicked_delete_images_button)
-        self.ui.train_button.clicked.connect(self.on_clicked_train_button)
 
         self.ui.camera_and_images_menu = QMenu()
         self.ui.camera_and_images_menu.addAction(self.ui.select_images_action)
@@ -47,7 +46,6 @@ class DatasetWidget(QWidget):
         self.ui.image_list_widget.expandAll()
 
         self._reload_images(Dataset.Category.TRAINING_OK)
-        self.__reload_recent_training_date()
 
         self.capture_dialog: Optional[ImageCaptureDialog] = None
 

@@ -79,11 +79,10 @@ class MainWindow(QMainWindow):
         self.ui.inspection_action.setChecked(True)
         self.ui.action_group.setExclusive(True)
 
-        try:
-            self.on_clicked_inspection_button()
-            self.ui.inspection_action.setChecked(True)
-            LearningModel.default().load_weights()
-        except FileNotFoundError:
+        self.on_clicked_inspection_button()
+        self.ui.inspection_action.setChecked(True)
+        is_file = os.path.isfile(Project.project_path() + '/models/saved_model.pb')
+        if not is_file:
             self.on_clicked_optimization_button()
             self.ui.optimization_action.setChecked(True)
 

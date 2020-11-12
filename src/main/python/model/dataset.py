@@ -49,15 +49,13 @@ class Dataset:
         return cls.images_path(category).joinpath(file_name)
 
     @classmethod
-    def trim_image(cls, path: Path, save_path: Path, data: TrimmingData) -> Path:
+    def trim_image(cls, path: Path, save_path: Path) -> Path:
         try:
             img = imageio.imread(path)
         except:
             return path
         file_name = os.path.basename(path)
-        position = data.position
-        size = data.size
-        rect = img[int(position[1]):int(position[1])+size[1], int(position[0]):int(position[0])+size[0]]
+        rect = img
         imageio.imwrite(os.path.join(save_path, file_name), rect)
         return
 
