@@ -26,10 +26,6 @@ class Ui_AIOptimization(object):
         self.dataset_tab.setStyleSheet("")
         self.dataset_tab.setObjectName("dataset_tab")
         self.tab_widget.addTab(self.dataset_tab, "")
-        self.test_tab = TestWidget()
-        self.test_tab.setStyleSheet("")
-        self.test_tab.setObjectName("test_tab")
-        self.tab_widget.addTab(self.test_tab, "")
         self.main_area.addWidget(self.tab_widget)
 
         self.retranslateUi(AIOptimization)
@@ -40,7 +36,6 @@ class Ui_AIOptimization(object):
         _translate = QtCore.QCoreApplication.translate
         AIOptimization.setWindowTitle(_translate("AIOptimization", "Learning"))
         self.tab_widget.setTabText(self.tab_widget.indexOf(self.dataset_tab), _translate("AIOptimization", "Dataset"))
-        self.tab_widget.setTabText(self.tab_widget.indexOf(self.test_tab), _translate("AIOptimization", "Performance report"))
 
 from view.dataset import DatasetWidget
 from view.test import TestWidget

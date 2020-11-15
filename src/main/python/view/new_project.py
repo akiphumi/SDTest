@@ -1,11 +1,11 @@
 ﻿from view.ui.new_project import Ui_NewProjectDialog
 from model.project import Project
 from view.main_window import MainWindow
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtWidgets import QWidget, QFileDialog, QMessageBox
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtCore import QRegExp, pyqtSignal
 from model.fbs import AppInfo
-import os.path
+import os.path, unicodedata
 
 '''
 - プロジェクト名.sdt(プロジェクトファイル)
@@ -15,6 +15,7 @@ import os.path
         - NG
     - train 
         - OK
+    - truncated
 - inspection_results
     - images 
 - tmp
@@ -44,8 +45,9 @@ class NewProjectDialog(QWidget):
         self.ui.save_location_line.setText(os.path.expanduser('~')+'/')
         self.main_window = None
         self.come_from_main_window_flag = False
+        self.msgBox = None
         # '/'の入力を制限(validation)
-        reg_ex = QRegExp("[^//]+")
+        reg_ex = QRegExp("[^\\\/:\*\?\"<>|]+")
         validator = QRegExpValidator(reg_ex, self.ui.project_name_line)
         self.ui.project_name_line.setValidator(validator)
 
@@ -57,10 +59,19 @@ class NewProjectDialog(QWidget):
     def on_clicked_create_button(self):
         save_location_path = self.ui.save_location_line.text()
         project_name = os.path.basename(self.ui.project_name_line.text())
+
+        if not self.is_valid_character(project_name, save_location_path):
+            self.msgBox = QMessageBox()
+            self.msgBox.setText('The project name or directory name contains unacceptable characters.\n'
+                                'If it contains two-byte characters or special symbols, rename it or change it to a different directory.')
+            self.msgBox.exec()
+            return
+
         dir_paths = [
             os.path.join(save_location_path, 'dataset/test/OK'),
             os.path.join(save_location_path, 'dataset/test/NG'),
             os.path.join(save_location_path, 'dataset/train/OK'),
+            os.path.join(save_location_path, 'dataset/truncated'),
             os.path.join(save_location_path, 'inspection_results'),
             os.path.join(save_location_path, 'inspection_results/images'),
             os.path.join(save_location_path, 'tmp'),
@@ -115,4 +126,18 @@ class NewProjectDialog(QWidget):
     def on_back_to_startup_signal(self):
         self.back_to_startup.emit()
         self.main_window = MainWindow()
+
+    def is_valid_character(self, project_name, save_location_path):
+        forbidden_characters = ['\\', ':', '*', '?', '"', '<', '>', '|']
+        for letter in project_name:
+            if unicodedata.east_asian_width(letter) != 'Na' or letter in forbidden_characters:
+                return False
+            else:
+                continue
+        for letter2 in save_location_path:
+            if unicodedata.east_asian_width(letter2) != 'Na':
+                return False
+            else:
+                continue
+        return True
 

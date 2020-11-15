@@ -51,6 +51,8 @@ class InspectionWidget(QWidget):
         self.ui.OK_counter_label.setText(str(self.ok_counter))
         self.ui.NG_counter_label.setText(str(self.ng_counter))
 
+        self.msgBox = None
+
     @property
     def ok_counter(self):
         return self.__ok_counter
@@ -92,25 +94,28 @@ class InspectionWidget(QWidget):
     def on_image_saved(self, image_path):
         # FIXME: refactor the structure of camera model class not to call this function from camera_model.capture
         if os.path.basename(os.path.dirname(image_path)) == 'tmp':
-            self.learning_model.start_predict([image_path])
+            path = self.learning_model.start_predict([image_path])
+            if path:
+                self.alert_for_truncated_image(path)
 
     def on_finished_predicting(self, result):
         image_path = result['image_paths'][0]
         image_name = os.path.basename(image_path)
         inspected_image_dir_path = Project.project_path() + self.__INSPECTED_IMAGES_DIR_NAME
-        score = result['scores'][0]
+        score = result['scores']
+        prediction = result['prediction']
         self.ui.loader_label.clear()
-        if score >= Project.latest_threshold():
+        if prediction == 'good':
             self.ui.result.setCurrentWidget(self.ui.OK)
             move(image_path, inspected_image_dir_path + '/OK_' + image_name)
-            self.ui.ok_score.setText('Score: ' + str(score))
+            self.ui.ok_score.setText('Score: ' + '{:.2%}'.format(score))
             self.ok_counter += 1
         else:
             ng_image = QPixmap(str(image_path))
             self.ui.ng_image.setPixmap(ng_image.scaled(self.ui.ng_image.size()))
             self.ui.result.setCurrentWidget(self.ui.NG)
-            self.ui.ng_score.setText('Score: ' + str(score) + '\nThreshold: ' +
-                                     str(Project.latest_threshold()))
+            self.ui.ng_score.setText('Score: ' + '{:.2%}'.format(score) + '\nLabel: ' +
+                                     prediction)
             move(image_path, inspected_image_dir_path + '/NG_' + image_name)
             self.ng_counter += 1
         self.ui.inspect_button.setDisabled(False)
@@ -140,7 +145,16 @@ class InspectionWidget(QWidget):
             file_name = f'camera_0_{timestamp}.{ext}'
             copied_image_path = Project.project_path() + '/tmp/' + file_name
             copy2(original_image_path, copied_image_path)
-            self.learning_model.start_predict([copied_image_path])
+            path = self.learning_model.start_predict([copied_image_path])
+            if path:
+                self.alert_for_truncated_image(original_image_path)
+                return
             self.ui.inspect_button.setDisabled(True)
             self.ui.inspect_existing_image_button.setDisabled(True)
+
+    def alert_for_truncated_image(self, path):
+        self.msgBox = QMessageBox()
+        self.msgBox.setText('This image may be damaged. Inspection will be skipped.\n\n'
+                            + 'Please press OK to continue your inspection.')
+        self.msgBox.exec()
 

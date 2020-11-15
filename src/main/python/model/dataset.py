@@ -2,8 +2,7 @@ from datetime import datetime
 from enum import Enum, auto
 from pathlib import Path
 from model.project import Project
-from model.supporting_model import TrimmingData
-import os, cv2
+import os, shutil, imageio
 
 
 class Dataset:
@@ -12,6 +11,7 @@ class Dataset:
         TRAINING_OK = auto()
         TEST_OK = auto()
         TEST_NG = auto()
+        TRUNCATED = auto()
 
     @classmethod
     def _root_path(cls) -> str:
@@ -25,6 +25,8 @@ class Dataset:
             return Path(cls._root_path() + '/test/OK')
         elif category is cls.Category.TEST_NG:
             return Path(cls._root_path() + '/test/NG')
+        elif category is cls.Category.TRUNCATED:
+            return Path(cls._root_path() + '/truncated')
         else:
             assert False
 
@@ -46,11 +48,13 @@ class Dataset:
         return cls.images_path(category).joinpath(file_name)
 
     @classmethod
-    def trim_image(cls, path: Path, save_path: Path, data: TrimmingData):
-        img = cv2.imread(path)
-        position = data.position
-        size = data.size
-        rect = img[int(position[1]):int(position[1])+size[1], int(position[0]):int(position[0])+size[0]]
+    def trim_image(cls, path: Path, save_path: Path) -> Path:
+        try:
+            img = imageio.imread(path)
+        except:
+            return path
         file_name = os.path.basename(path)
-        cv2.imwrite(os.path.join(save_path, file_name), rect)
+        rect = img
+        imageio.imwrite(os.path.join(save_path, file_name), rect)
+        return
 

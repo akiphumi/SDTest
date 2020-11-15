@@ -53,6 +53,12 @@ class Ui_NewProjectDialog(object):
         self.save_location_label.setFont(font)
         self.save_location_label.setObjectName("save_location_label")
         self.save_location_layout.addWidget(self.save_location_label, 0, 0, 1, 1)
+        self.notation_label = QtWidgets.QLabel(self.verticalLayoutWidget)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.notation_label.setFont(font)
+        self.notation_label.setObjectName("notation_label")
+        self.save_location_layout.addWidget(self.notation_label, 3, 0, 1, 1)
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(NewProjectDialog)
         self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(70, 50, 511, 61))
         self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
@@ -101,9 +107,10 @@ class Ui_NewProjectDialog(object):
     def retranslateUi(self, NewProjectDialog):
         _translate = QtCore.QCoreApplication.translate
         NewProjectDialog.setWindowTitle(_translate("NewProjectDialog", "Dialog"))
-        self.reference_button.setText(_translate("NewProjectDialog", "参照"))
-        self.save_location_label.setText(_translate("NewProjectDialog", "保存先"))
-        self.project_name_label.setText(_translate("NewProjectDialog", "プロジェクト名"))
-        self.cancel_button.setText(_translate("NewProjectDialog", "キャンセル"))
-        self.create_button.setText(_translate("NewProjectDialog", "作成"))
+        self.reference_button.setText(_translate("NewProjectDialog", "Browse"))
+        self.save_location_label.setText(_translate("NewProjectDialog", "Save"))
+        self.notation_label.setText(_translate("NewProjectDialog", "Note: Non-alphanumeric characters are not allowed."))
+        self.project_name_label.setText(_translate("NewProjectDialog", "Project Name"))
+        self.cancel_button.setText(_translate("NewProjectDialog", "Cancel"))
+        self.create_button.setText(_translate("NewProjectDialog", "Create"))
 

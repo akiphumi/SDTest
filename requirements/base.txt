@@ -3,7 +3,6 @@ matplotlib
 sklearn
 joblib
 seaborn
-numpy
 pyqtdeploy
 GitPython
 pyod
@@ -13,8 +12,7 @@ picamera
 ###### Requirements with Version Specifiers ######
 fbs[sentry] == 0.8.3
 PyInstaller == 3.4
-tensorflow == 1.13.1
-keras == 2.2.4
+keras == 2.2.*
 imageio == 2.*
 scikit-image == 0.*
-opencv-contrib-python == 4.0.1.24
+opencv-contrib-python == 4.1.0.25

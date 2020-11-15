@@ -33,7 +33,6 @@ class DatasetWidget(QWidget):
 
         self.ui.image_list_widget.itemSelectionChanged.connect(self.on_changed_image_list_selection)
         self.ui.delete_images_button.clicked.connect(self.on_clicked_delete_images_button)
-        self.ui.train_button.clicked.connect(self.on_clicked_train_button)
 
         self.ui.camera_and_images_menu = QMenu()
         self.ui.camera_and_images_menu.addAction(self.ui.select_images_action)
@@ -47,7 +46,6 @@ class DatasetWidget(QWidget):
         self.ui.image_list_widget.expandAll()
 
         self._reload_images(Dataset.Category.TRAINING_OK)
-        self.__reload_recent_training_date()
 
         self.capture_dialog: Optional[ImageCaptureDialog] = None
 
@@ -60,6 +58,7 @@ class DatasetWidget(QWidget):
         self.watcher.directoryChanged.connect(self.on_dataset_directory_changed)
 
         self.select_area_dialog = None
+        self.msgBox = None
 
         LearningModel.default().training_finished.connect(self.on_finished_training)
 
@@ -167,14 +166,30 @@ class DatasetWidget(QWidget):
             self._reload_images(self.__selected_dataset_category())
 
     def on_clicked_train_button(self):
-        del self.select_area_dialog
-        self.select_area_dialog = SelectAreaDialog()
-        self.select_area_dialog.finish_selecting_area.connect(self.on_finished_selecting_area)
-        self.select_area_dialog.show()
-        self.__reload_recent_training_date()
+        img_suffix_list = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
+
+        if not [img for img in os.listdir(Dataset.images_path(Dataset.Category.TEST_NG)) if
+                Path(img).suffix in img_suffix_list]:
+            self.msgBox = QMessageBox()
+            self.msgBox.setText('The defective image folder for performance evaluation is empty.\nPlease add one or more defective images to start training.')
+            self.msgBox.exec()
+            return
+        elif not [img for img in os.listdir(Dataset.images_path(Dataset.Category.TEST_OK)) if
+                  Path(img).suffix in img_suffix_list]:
+            self.msgBox = QMessageBox()
+            self.msgBox.setText('The folder of good images for performance evaluation is empty.\nPlease add at least one good image to start training.')
+            self.msgBox.exec()
+            return
+        elif not [img for img in os.listdir(Dataset.images_path(Dataset.Category.TRAINING_OK)) if
+                  Path(img).suffix in img_suffix_list]:
+            self.msgBox = QMessageBox()
+            self.msgBox.setText('The good images folder for training is empty.\nPlease add at least one good image to start training.')
+            self.msgBox.exec()
+            return
 
     def on_finished_selecting_area(self, data: TrimmingData):
         categories = [Dataset.Category.TRAINING_OK, Dataset.Category.TEST_OK, Dataset.Category.TEST_NG]
+        truncated_image_paths = []
         for category in categories:
             dir_path = Dataset.images_path(category)
             save_path = Dataset.trimmed_path(category)
@@ -188,8 +203,27 @@ class DatasetWidget(QWidget):
                 file_list = [img for img in file_list if
                                   Path(img).suffix in ['.jpg', '.jpeg', '.png', '.gif', '.bmp']]
                 for file_name in file_list:
-                    Dataset.trim_image(os.path.join(dir_path, file_name), save_path, data)
-        Project.save_latest_trimming_data(data)
+                    truncated_image_path = Dataset.trim_image(os.path.join(dir_path, file_name), save_path, data)
+                    if truncated_image_path:
+                        file_name = os.path.basename(truncated_image_path)
+                        shutil.move(truncated_image_path,
+                                    os.path.join(Dataset.images_path(Dataset.Category.TRUNCATED), file_name))
+                        truncated_image_paths.append(truncated_image_path)
+                Project.save_latest_trimming_data(data)
+
+        # alert for moving truncated images
+        if truncated_image_paths:
+            self.msgBox = QMessageBox()
+            self.msgBox.setText(
+                str(len(truncated_image_paths)) + 'images could not be loaded. These images have been moved to the truncated folder.\n\n' \
+                + 'Do you want to start training at this point?')
+            self.msgBox.setStandardButtons(self.msgBox.Yes | self.msgBox.No)
+            self.msgBox.setDefaultButton(self.msgBox.Yes)
+            reply = self.msgBox.exec()
+            if reply == self.msgBox.No:
+                return
+
+        # start training
         LearningModel.default().start_training()
 
     def on_dataset_directory_changed(self, directory: str):
