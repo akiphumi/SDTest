@@ -62,8 +62,8 @@ class NewProjectDialog(QWidget):
 
         if not self.is_valid_character(project_name, save_location_path):
             self.msgBox = QMessageBox()
-            self.msgBox.setText('プロジェクト名またはディレクトリ名に、使用できない文字が含まれています。\n'
-                                '全角文字や特殊記号が使われている場合は、名前を変えるか別のディレクトリに変更してください。')
+            self.msgBox.setText('The project name or directory name contains unacceptable characters.\n'
+                                'If it contains two-byte characters or special symbols, rename it or change it to a different directory.')
             self.msgBox.exec()
             return
 
@@ -140,3 +140,4 @@ class NewProjectDialog(QWidget):
             else:
                 continue
         return True
+

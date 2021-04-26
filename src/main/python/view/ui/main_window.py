@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.main_stacked_widget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 795, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 795, 24))
         self.menubar.setObjectName("menubar")
         self.menu_file = QtWidgets.QMenu(self.menubar)
         self.menu_file.setObjectName("menu_file")
@@ -47,7 +47,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.toolBar = QtWidgets.QToolBar(MainWindow)
         self.toolBar.setMovable(False)
-        self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+        self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.inspection_action = QtWidgets.QAction(MainWindow)
@@ -102,19 +102,22 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.menu_file.setTitle(_translate("MainWindow", "ファイル"))
-        self.menu_help.setTitle(_translate("MainWindow", "ヘルプ"))
-        self.inspection_action.setText(_translate("MainWindow", "検品"))
-        self.optimization_action.setText(_translate("MainWindow", "学習"))
-        self.optimization_action.setToolTip(_translate("MainWindow", "学習"))
-        self.past_result_action.setText(_translate("MainWindow", "レポート"))
-        self.action_open.setText(_translate("MainWindow", "開く"))
-        self.action_new_project.setText(_translate("MainWindow", "新規プロジェクト"))
-        self.action_close.setText(_translate("MainWindow", "閉じる"))
-        self.action_website.setText(_translate("MainWindow", "SDtestホームページ"))
+        self.menu_file.setTitle(_translate("MainWindow", "File"))
+        self.menu_help.setTitle(_translate("MainWindow", "Help"))
+        self.inspection_action.setText(_translate("MainWindow", "Inspection"))
+        self.inspection_action.setIconText(_translate("MainWindow", "Inspection"))
+        self.optimization_action.setText(_translate("MainWindow", "Learning"))
+        self.optimization_action.setToolTip(_translate("MainWindow", "Learning"))
+        self.past_result_action.setText(_translate("MainWindow", "Report"))
+        self.past_result_action.setIconText(_translate("MainWindow", "Report"))
+        self.past_result_action.setToolTip(_translate("MainWindow", "Report"))
+        self.action_open.setText(_translate("MainWindow", "Open"))
+        self.action_new_project.setText(_translate("MainWindow", "New project"))
+        self.action_close.setText(_translate("MainWindow", "Close"))
+        self.action_website.setText(_translate("MainWindow", "SDtest homepage"))
         self.action_version.setText(_translate("MainWindow", "About SDTest"))
-        self.action_about_SDT.setText(_translate("MainWindow", "SDTestについて"))
-        self.action_about_SDT.setToolTip(_translate("MainWindow", "SDTestについて"))
-        self.action_quit_SDTest.setText(_translate("MainWindow", "SDTestを終了"))
+        self.action_about_SDT.setText(_translate("MainWindow", "About SDTest"))
+        self.action_about_SDT.setToolTip(_translate("MainWindow", "About SDTest"))
+        self.action_quit_SDTest.setText(_translate("MainWindow", "Exit SDTest"))
 
 from qrc import icon_rc

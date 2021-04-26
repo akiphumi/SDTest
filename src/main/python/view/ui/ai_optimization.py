@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ai_optimization.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ class Ui_AIOptimization(object):
     def setupUi(self, AIOptimization):
         AIOptimization.setObjectName("AIOptimization")
         AIOptimization.resize(842, 532)
-        AIOptimization.setMinimumSize(QtCore.QSize(842, 532))
+        AIOptimization.setMinimumSize(QtCore.QSize(780, 321))
         font = QtGui.QFont()
         font.setPointSize(9)
         AIOptimization.setFont(font)
@@ -34,8 +34,8 @@ class Ui_AIOptimization(object):
 
     def retranslateUi(self, AIOptimization):
         _translate = QtCore.QCoreApplication.translate
-        AIOptimization.setWindowTitle(_translate("AIOptimization", "学習"))
-        self.tab_widget.setTabText(self.tab_widget.indexOf(self.dataset_tab), _translate("AIOptimization", "データセットの管理とトレーニング"))
+        AIOptimization.setWindowTitle(_translate("AIOptimization", "Learning"))
+        self.tab_widget.setTabText(self.tab_widget.indexOf(self.dataset_tab), _translate("AIOptimization", "Dataset"))
 
 from view.dataset import DatasetWidget
 from view.test import TestWidget

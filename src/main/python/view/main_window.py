@@ -9,6 +9,7 @@ from view.past_result import PastResultWidget
 from model.project import Project
 from model.learning_model import LearningModel
 from model.fbs import AppInfo
+# from model.camera_model import CameraModel
 from pathlib import Path
 from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QDesktopWidget
@@ -35,13 +36,13 @@ class MainWindow(QMainWindow):
 
         self.msgBox = None
 
-        self.inspection_mainwindow_size = QSize(780, 550)
-        self.optimization_mainwindow_size = QSize(864, 730)
-        self.past_result_mainwindow_size = QSize(780, 600)
+        self.inspection_mainwindow_size = QSize(800, 440)
+        self.optimization_mainwindow_size = QSize(800, 440)
+        self.past_result_mainwindow_size = QSize(800, 440)
 
-        self.inspection_widget_size = QSize(740, 420)
-        self.optimization_widget_size = QSize(840, 600)
-        self.past_result_widget_size = QSize(740, 400)
+        self.inspection_widget_size = QSize(759, 336)
+        self.optimization_widget_size = QSize(778, 362)
+        self.past_result_widget_size = QSize(759, 293)
 
         self.latest_cpos = None
         self.move_window_position()
@@ -57,6 +58,8 @@ class MainWindow(QMainWindow):
         LearningModel.default().predicting_finished.connect(self.on_finished_predicting)
         LearningModel.default().training_start.connect(self.on_start_training)
         LearningModel.default().training_finished.connect(self.on_finished_training)
+
+#         self.camera_model = CameraModel.default()
 
     def setup_menu_bar(self):
         self.ui.action_new_project.triggered.connect(self.on_triggered_action_new_project)
@@ -81,7 +84,8 @@ class MainWindow(QMainWindow):
 
         self.on_clicked_inspection_button()
         self.ui.inspection_action.setChecked(True)
-        is_file = os.path.isfile(Project.project_path() + '/models/saved_model.pb')
+#        is_file = os.path.isfile(Project.project_path() + '/models/saved_model.pb')
+        is_file = os.path.isfile(Project.project_path() + '/models/saved_model.tflite')
         if not is_file:
             self.on_clicked_optimization_button()
             self.ui.optimization_action.setChecked(True)
@@ -105,30 +109,27 @@ class MainWindow(QMainWindow):
         self.statusBar().setSizeGripEnabled(False)
 
     def on_clicked_inspection_button(self):
-        self.latest_cpos = self.frameGeometry().center()
-        self.ui.main_stacked_widget.widget(self.inspection_widget_id).set_camera_to_camera_preview()
+#         self.ui.main_stacked_widget.widget(self.inspection_widget_id).set_camera_to_camera_preview()
         self.ui.main_stacked_widget.setCurrentIndex(self.inspection_widget_id)
         self.setFixedSize(self.inspection_mainwindow_size)
         self.ui.main_stacked_widget.setFixedSize(self.inspection_widget_size)
         self.move_window_position(self.latest_cpos)
 
     def on_clicked_optimization_button(self):
-        self.latest_cpos = self.frameGeometry().center()
         self.ui.main_stacked_widget.setCurrentIndex(self.ai_optimization_widget_id)
         self.setFixedSize(self.optimization_mainwindow_size)
         self.ui.main_stacked_widget.setFixedSize(self.optimization_widget_size)
         self.move_window_position(self.latest_cpos)
 
     def on_clicked_past_result_button(self):
-        self.latest_cpos = self.frameGeometry().center()
         self.ui.main_stacked_widget.setCurrentIndex(self.past_result_widget_id)
         self.setFixedSize(self.past_result_mainwindow_size)
         self.ui.main_stacked_widget.setFixedSize(self.past_result_widget_size)
         self.move_window_position(self.latest_cpos)
 
     def on_triggered_action_open(self):
-        save_location_path = QFileDialog.getOpenFileName(self, 'プロジェクトを開く', os.path.expanduser('~'),
-                                                         AppInfo().app_name() + ' プロジェクト(*.sdt);;すべて(*.*)')[0]
+        save_location_path = QFileDialog.getOpenFileName(self, 'Open project', os.path.expanduser('~'),
+                                                         AppInfo().app_name() + ' project(*.sdt);;all(*.*)')[0]
         if not save_location_path:
             return
         Project.load_settings_file(save_location_path)
@@ -154,6 +155,7 @@ class MainWindow(QMainWindow):
         self.msgBox.exec()
 
     def closeEvent(self, QCloseEvent):
+#         self.camera_model.close()
         sys.exit()
 
     def on_start_predicting(self):
@@ -163,7 +165,7 @@ class MainWindow(QMainWindow):
         self.ui.optimization_action.setDisabled(False)
 
     def on_start_training(self):
-        self.training_message.setText('トレーニング中')
+        self.training_message.setText('Training')
         self.loader_label.show()
         self.ui.inspection_action.setDisabled(True)
 
@@ -172,7 +174,7 @@ class MainWindow(QMainWindow):
         self.loader_label.hide()
         self.ui.inspection_action.setDisabled(False)
 
-    def move_window_position(self, cpos=None):
+    def  move_window_position(self, cpos=None):
         fg = self.frameGeometry()
         if cpos is None:
             cpos = QDesktopWidget().availableGeometry().center()

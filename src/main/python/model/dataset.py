@@ -2,7 +2,6 @@ from datetime import datetime
 from enum import Enum, auto
 from pathlib import Path
 from model.project import Project
-from model.supporting_model import TrimmingData
 import os, shutil, imageio
 
 
@@ -55,6 +54,7 @@ class Dataset:
         except:
             return path
         file_name = os.path.basename(path)
+        print('file_name = ' + file_name)
         rect = img
         imageio.imwrite(os.path.join(save_path, file_name), rect)
         return

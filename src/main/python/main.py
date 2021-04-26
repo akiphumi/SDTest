@@ -39,13 +39,23 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         """ start QtApplication """
         startup_window = StartupWidget()
         startup_window.setWindowTitle(AppInfo().app_name() + ' Version ' + AppInfo().version())
+        print('start QtApplication')
         if len(sys.argv) > 1 and type(sys.argv[1]) is str:
+            print('start QtApplication 1')
             project_file_path = sys.argv[1]
             _, ext = os.path.splitext(project_file_path)
             if ext == '.sdt':
+                print('project_file_path = ' + project_file_path)
                 startup_window.move_to_main_window(project_file_path)
         else:
-            startup_window.show()
+            print('start QtApplication 2')
+#            startup_window.show()
+            project_file_path = '/home/pi/Seal_inspection_keyencecamera/Seal_inspection_keyencecamera.sdt'
+            startup_window.move_to_main_window(project_file_path)
+
+            # from view.q_camera_view_finder_with_guide import QCameraViewFinderWithGuide
+            # q_camera = QCameraViewFinderWithGuide()
+            # q_camera.show()
 
         # スタイルをwindows共用に(for develop)
         # self.app.setStyle(QStyleFactory.create('Fusion'))
@@ -53,9 +63,6 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         # Enable High DPI display with PyQt5
         os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
         self.app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-
-        # Disable [?] button on dialogs
-        self.app.setAttribute(QtCore.Qt.AA_DisableWindowContextHelpButton, True)
 
         return self.app.exec_()
 

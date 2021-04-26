@@ -58,7 +58,7 @@ class Ui_CaptureImages(object):
 
     def retranslateUi(self, CaptureImages):
         _translate = QtCore.QCoreApplication.translate
-        CaptureImages.setWindowTitle(_translate("CaptureImages", "カメラで撮影"))
-        self.select_camera_button.setText(_translate("CaptureImages", "カメラを変更"))
-        self.capture_button.setText(_translate("CaptureImages", "撮影"))
+        CaptureImages.setWindowTitle(_translate("CaptureImages", "Shoot with camera"))
+        self.select_camera_button.setText(_translate("CaptureImages", "Select camera"))
+        self.capture_button.setText(_translate("CaptureImages", "Capture"))
 

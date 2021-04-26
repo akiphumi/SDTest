@@ -76,7 +76,7 @@ class DatasetWidget(QWidget):
         image_paths = sorted(Dataset.images_path(category).iterdir())
         nullable_thumbnails = [Thumbnail(path=image_path) for image_path in image_paths]
         self.all_thumbnails = [thumbnail for thumbnail in nullable_thumbnails if not thumbnail.pixmap.isNull()]
-        self.ui.number_of_images_label.setText(f'{len(self.all_thumbnails)}枚')
+        self.ui.number_of_images_label.setText(f'{len(self.all_thumbnails)}images')
 
         row = 0
         column = 0
@@ -104,10 +104,10 @@ class DatasetWidget(QWidget):
             self.selected_thumbnails.remove(thumbnail)
 
         if self.selected_thumbnails:
-            number_of_images_description = f'{len(self.all_thumbnails)}枚 - {len(self.selected_thumbnails)}枚選択中'
+            number_of_images_description = f'{len(self.all_thumbnails)}images - {len(self.selected_thumbnails)}images selected'
             self.ui.delete_images_button.setEnabled(True)
         else:
-            number_of_images_description = f'{len(self.all_thumbnails)}枚'
+            number_of_images_description = f'{len(self.all_thumbnails)}images'
             self.ui.delete_images_button.setEnabled(False)
         self.ui.number_of_images_label.setText(number_of_images_description)
 
@@ -158,7 +158,7 @@ class DatasetWidget(QWidget):
     def on_clicked_delete_images_button(self):
         assert self.selected_thumbnails
 
-        message = f'{len(self.selected_thumbnails)}枚の画像を削除してよろしいですか?\nこの操作は取り消せません'
+        message = f'Are you sure you want to delete {len(self.selected_thumbnails)}images?\nThis action cannot be undone'
         selected_action = QMessageBox.warning(None, '', message, QMessageBox.Cancel, QMessageBox.Yes)
         if selected_action == QMessageBox.Yes:
             for selected_thumbnail in self.selected_thumbnails:
@@ -166,33 +166,26 @@ class DatasetWidget(QWidget):
             self._reload_images(self.__selected_dataset_category())
 
     def on_clicked_train_button(self):
-
         img_suffix_list = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
 
         if not [img for img in os.listdir(Dataset.images_path(Dataset.Category.TEST_NG)) if
-                     Path(img).suffix in img_suffix_list]:
+                Path(img).suffix in img_suffix_list]:
             self.msgBox = QMessageBox()
-            self.msgBox.setText('性能評価用の不良品画像フォルダが空です.\nトレーニングを開始するには不良品画像を1枚以上追加してください.')
+            self.msgBox.setText('The defective image folder for performance evaluation is empty.\nPlease add one or more defective images to start training.')
             self.msgBox.exec()
             return
         elif not [img for img in os.listdir(Dataset.images_path(Dataset.Category.TEST_OK)) if
-                     Path(img).suffix in img_suffix_list]:
+                  Path(img).suffix in img_suffix_list]:
             self.msgBox = QMessageBox()
-            self.msgBox.setText('性能評価用の良品画像フォルダが空です.\nトレーニングを開始するには良品画像を1枚以上追加してください.')
+            self.msgBox.setText('The folder of good images for performance evaluation is empty.\nPlease add at least one good image to start training.')
             self.msgBox.exec()
             return
         elif not [img for img in os.listdir(Dataset.images_path(Dataset.Category.TRAINING_OK)) if
-                     Path(img).suffix in img_suffix_list]:
+                  Path(img).suffix in img_suffix_list]:
             self.msgBox = QMessageBox()
-            self.msgBox.setText('トレーニング用の良品画像フォルダが空です.\nトレーニングを開始するには良品画像を1枚以上追加してください.')
+            self.msgBox.setText('The good images folder for training is empty.\nPlease add at least one good image to start training.')
             self.msgBox.exec()
             return
-
-        del self.select_area_dialog
-        self.select_area_dialog = SelectAreaDialog()
-        self.select_area_dialog.finish_selecting_area.connect(self.on_finished_selecting_area)
-        self.select_area_dialog.show()
-        self.__reload_recent_training_date()
 
     def on_finished_selecting_area(self, data: TrimmingData):
         categories = [Dataset.Category.TRAINING_OK, Dataset.Category.TEST_OK, Dataset.Category.TEST_NG]
@@ -216,13 +209,14 @@ class DatasetWidget(QWidget):
                         shutil.move(truncated_image_path,
                                     os.path.join(Dataset.images_path(Dataset.Category.TRUNCATED), file_name))
                         truncated_image_paths.append(truncated_image_path)
-            Project.save_latest_trimming_data(data)
+                Project.save_latest_trimming_data(data)
 
         # alert for moving truncated images
         if truncated_image_paths:
             self.msgBox = QMessageBox()
-            self.msgBox.setText(str(len(truncated_image_paths))+'枚の画像を読み込めませんでした. これらの画像はtruncatedフォルダに移動されました.\n\n'\
-                                + 'このままトレーニングを開始しますか？')
+            self.msgBox.setText(
+                str(len(truncated_image_paths)) + 'images could not be loaded. These images have been moved to the truncated folder.\n\n' \
+                + 'Do you want to start training at this point?')
             self.msgBox.setStandardButtons(self.msgBox.Yes | self.msgBox.No)
             self.msgBox.setDefaultButton(self.msgBox.Yes)
             reply = self.msgBox.exec()
@@ -244,15 +238,15 @@ class DatasetWidget(QWidget):
         current_item = self.ui.image_list_widget.currentItem()
         current_item_text = current_item.text(0)
         # FIXME: refactor
-        if current_item_text == 'トレーニング用画像' or current_item_text == '性能評価用画像':
+        if current_item_text == 'Training images' or current_item_text == 'Test images':
             return None
-        elif current_item.parent().text(0) == 'トレーニング用画像':
-            if current_item_text == '良品':  # train_OK
+        elif current_item.parent().text(0) == 'Training images':
+            if current_item_text == 'Good product':  # train_OK
                 return Dataset.Category.TRAINING_OK
-        elif current_item.parent().text(0) == '性能評価用画像':
-            if current_item_text == '良品':  # test_OK
+        elif current_item.parent().text(0) == 'Test images':
+            if current_item_text == 'Good product':  # test_OK
                 return Dataset.Category.TEST_OK
-            elif current_item_text == '不良品':  # test_NG
+            elif current_item_text == 'Defective product':  # test_NG
                 return Dataset.Category.TEST_NG
         else:
             assert False
@@ -260,10 +254,10 @@ class DatasetWidget(QWidget):
     def __reload_recent_training_date(self):
         latest_training_date = Project.latest_training_date()
         if latest_training_date is None:
-            self.ui.latest_training_date_label.setText('トレーニング未実行')
+            self.ui.latest_training_date_label.setText('Training not performed')
         else:
             date_description = latest_training_date.strftime('%Y/%m/%d')
-            self.ui.latest_training_date_label.setText(f'前回のトレーニング：{date_description}')
+            self.ui.latest_training_date_label.setText(f'Previous training：{date_description}')
 
 
 class ThumbnailCell(QWidget):

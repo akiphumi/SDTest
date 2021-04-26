@@ -43,12 +43,12 @@
      <x>0</x>
      <y>0</y>
      <width>795</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
     <property name="title">
-     <string>ファイル</string>
+     <string>File</string>
     </property>
     <addaction name="action_new_project"/>
     <addaction name="action_open"/>
@@ -57,7 +57,7 @@
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
-     <string>ヘルプ</string>
+     <string>Help</string>
     </property>
     <addaction name="action_website"/>
     <addaction name="action_version"/>
@@ -71,7 +71,7 @@
     <bool>false</bool>
    </property>
    <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextUnderIcon</enum>
+    <enum>Qt::ToolButtonIconOnly</enum>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -95,7 +95,10 @@
      <normaloff>:/icon/resources/base/fonts/fontawesome/small_eye_black.png</normaloff>:/icon/resources/base/fonts/fontawesome/small_eye_black.png</iconset>
    </property>
    <property name="text">
-    <string>検品</string>
+    <string>Inspection</string>
+   </property>
+   <property name="iconText">
+    <string>Inspection</string>
    </property>
   </action>
   <action name="optimization_action">
@@ -107,10 +110,10 @@
      <normaloff>:/icon/resources/base/fonts/fontawesome/brain_black.png</normaloff>:/icon/resources/base/fonts/fontawesome/brain_black.png</iconset>
    </property>
    <property name="text">
-    <string>学習</string>
+    <string>Learning</string>
    </property>
    <property name="toolTip">
-    <string>学習</string>
+    <string>Learning</string>
    </property>
   </action>
   <action name="past_result_action">
@@ -122,27 +125,33 @@
      <normaloff>:/icon/resources/base/fonts/fontawesome/history_black.png</normaloff>:/icon/resources/base/fonts/fontawesome/history_black.png</iconset>
    </property>
    <property name="text">
-    <string>レポート</string>
+    <string>Report</string>
+   </property>
+   <property name="iconText">
+    <string>Report</string>
+   </property>
+   <property name="toolTip">
+    <string>Report</string>
    </property>
   </action>
   <action name="action_open">
    <property name="text">
-    <string>開く</string>
+    <string>Open</string>
    </property>
   </action>
   <action name="action_new_project">
    <property name="text">
-    <string>新規プロジェクト</string>
+    <string>New project</string>
    </property>
   </action>
   <action name="action_close">
    <property name="text">
-    <string>閉じる</string>
+    <string>Close</string>
    </property>
   </action>
   <action name="action_website">
    <property name="text">
-    <string>SDtestホームページ</string>
+    <string>SDtest homepage</string>
    </property>
   </action>
   <action name="action_version">

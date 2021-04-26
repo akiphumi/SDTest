@@ -11,7 +11,6 @@ class Project:
     __project_name_key = "project_name"
     __project_file_extension = ".sdt"
     __number_of_angles_key = "number_of_angles"
-    __plc_ip_address_key = "plc_ip_address"
     __latest_threshold_key = "latest_threshold"
     __latest_trimming_data_key = "latest_trimming_data"
     __latest_training_date_key = "latest_training_date"
@@ -35,10 +34,6 @@ class Project:
     def save_number_of_angles(cls, input_data: int):
         cls.__settings_dict[cls.__number_of_angles_key] = input_data
         cls.__save_settings()
-
-    @classmethod
-    def plc_ip_address(cls) -> str:
-        return cls.__settings_dict[cls.__plc_ip_address_key]
 
     @classmethod
     def latest_threshold(cls) -> float:
@@ -124,7 +119,6 @@ class Project:
             cls.__project_name_key: project_name,
             cls.__latest_threshold_key: 0,
             cls.__number_of_angles_key: 1,
-            cls.__plc_ip_address_key: "192.168.0.1",
             cls.__latest_training_date_key: None,
             cls.__latest_dataset_image_path_key: None,
             cls.__latest_inspection_image_path_key: None,

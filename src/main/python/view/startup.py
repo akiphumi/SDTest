@@ -58,3 +58,4 @@ class StartupWidget(QWidget):
 
     def close_old_project(self):
         self.main_window = self.new_project_window.main_window
+

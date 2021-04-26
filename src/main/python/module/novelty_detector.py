@@ -14,7 +14,6 @@ import skimage.transform
 import joblib
 import pyod
 
-
 class NoveltyDetector:
 
     def __init__(self, nth_layer=18, nn_name='lobe', detector_name='svm', pool=None, pca_n_components=None):
@@ -60,7 +59,7 @@ class NoveltyDetector:
             from pyod.models.knn import KNN
             self.clf = KNN(method='median', contamination=0.1)
             print('Novelty Detector: Median K Nearest Neighbors')
-        elif detector_name_lower =='svm':
+        elif detector_name_lower == 'svm':
             from sklearn.svm import OneClassSVM
             self.clf = OneClassSVM(gamma='scale')
             print('SVM')
@@ -72,6 +71,7 @@ class NoveltyDetector:
         """
         This method should be called after loading images to set input shape.
         """
+        
         self.input_shape = input_shape
         print('Input image size is', self.input_shape)
 
@@ -160,10 +160,12 @@ class NoveltyDetector:
         return predicted_scores, feature.prediction
 
     def predict_paths(self, paths):
+        print('predict_paths')
         imgs = self._read_imgs(paths)
         return self.predict(imgs)
 
     def predict_in_dir(self, dir_path):
+        print('predict_in_dir')
         dir_path = os.path.expanduser(dir_path)
         paths = self._get_paths_in_dir(dir_path)
         return paths, self.predict_paths(paths)
@@ -181,6 +183,7 @@ class NoveltyDetector:
 
     def _get_paths_in_dir(self, dir_path):
         dir_path = os.path.expanduser(dir_path)
+        print('dir_path = ' + dir_path)
         if not os.path.exists(dir_path):
             raise IOError(dir_path, 'does not exist')
         imgs = []

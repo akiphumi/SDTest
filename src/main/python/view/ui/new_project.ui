@@ -30,7 +30,7 @@
      <x>70</x>
      <y>130</y>
      <width>511</width>
-     <height>91</height>
+     <height>61</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="save_location_layout">
@@ -82,7 +82,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
+	<item row="3" column="0">
      <widget class="QLabel" name="notation_label">
       <property name="font">
        <font>

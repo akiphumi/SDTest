@@ -171,12 +171,15 @@ class LearningModel(QObject):
         truncated_image_path = Dataset.trim_image(image_path, os.path.dirname(image_path))
         if truncated_image_path:
             return truncated_image_path
+        print('emit start')
         self.predicting_start.emit()
+        print('emit end')
         predict_thread = threading.Thread(target=self.predict, args=([image_paths]))
         predict_thread.start()
         return
 
     def predict(self, image_paths):
+        print('predict')
         scores, prediction = self.__model.predict_paths(image_paths)
         self.predicting_finished.emit({'scores': scores, 'prediction': prediction, 'image_paths': image_paths})
 
@@ -225,5 +228,6 @@ class PredictingThread(QThread):
         self.__image_paths = image_paths
 
     def run(self):
+        print('run')
         scores = self.__model.predict_paths(self.__image_paths)
         self.finished.emit({'scores': list(scores), 'image_paths': self.__image_paths})
